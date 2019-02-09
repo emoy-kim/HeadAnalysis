@@ -72,12 +72,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(OPENCV4_INCLUDE);$(OPENGL_INCLUDE);$(DLIB_PATH);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OPENCV4_LIB);$(OPENGL_LIB);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(OPENCV4_INCLUDE);$(OPENGL_INCLUDE);$(DLIB_PATH);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OPENCV4_LIB);$(OPENGL_LIB);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -143,6 +147,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Libraries\dlib1916\dlib\all\source.cpp" />
+    <ClCompile Include="HeadAnalysis.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelRender.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HeadAnalysis.h" />
+    <ClInclude Include="ModelRender.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
