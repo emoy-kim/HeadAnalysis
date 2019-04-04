@@ -1,3 +1,12 @@
+/*
+ * Author: Emoy Kim
+ * E-mail: emoy.kim_AT_gmail.com
+ * 
+ * This code is a free software; it can be freely used, changed and redistributed.
+ * If you use any version of the code, please reference the code.
+ * 
+ */
+
 #pragma once
 
 #include <OpenCVLinker.h>
@@ -14,75 +23,80 @@ using namespace std::experimental::filesystem;
 
 class ModelRender
 {
-	struct Camera
-	{
-		int Width;
-		int Height;
-		float FocalLength;
-		mat4 ToClipCoordinate;
+   struct Camera
+   {
+      int Width;
+      int Height;
+      float FocalLength;
+      mat4 ToClipCoordinate;
 
-		Camera() : Width( 0 ), Height( 0 ), FocalLength( 0.0f ) {}
-	};
+      Camera() : Width( 0 ), Height( 0 ), FocalLength( 0.0f ) {}
+   };
 
-	struct Object
-	{
-		GLenum DrawMode;
-		GLuint VAO, VBO;
-		GLsizei VerticesCount;
-		GLuint TextureID;
-		vector<GLfloat> DataBuffer;
+   struct Object
+   {
+      GLenum DrawMode;
+      GLuint VAO, VBO;
+      GLsizei VerticesCount;
+      GLuint TextureID;
+      vector<GLfloat> DataBuffer;
 
-		Object() : DrawMode( 0 ), VAO( 0 ), VBO( 0 ), VerticesCount( 0 ), TextureID( 0 ) {}
-	};
+      Object() : DrawMode( 0 ), VAO( 0 ), VBO( 0 ), VerticesCount( 0 ), TextureID( 0 ) {}
+   };
 
-	struct Shader
-	{
-		GLuint Program;
-		GLint MVPLocation;
-		GLint TextureLocation;
+   struct Shader
+   {
+      GLuint Program;
+      GLint MVPLocation;
+      GLint TextureLocation;
 
-		Shader() : Program( 0 ), MVPLocation( 0 ), TextureLocation( 0 ) {}
-	};
+      Shader() : Program( 0 ), MVPLocation( 0 ), TextureLocation( 0 ) {}
+   };
 
-	GLFWwindow* Window;
+   GLFWwindow* Window;
 
-	Camera MainCamera;
-	Object FaceObject;
-	Shader FaceShader;
-	GLuint FrameBufferObject;
-	GLuint ColorBufferObject;
-	GLuint DepthBufferObject;
+   Camera MainCamera;
+   Object FaceObject;
+   Shader FaceShader;
+   GLuint FrameBufferObject;
+   GLuint ColorBufferObject;
+   GLuint DepthBufferObject;
 
-	bool readObjectFile(vector<vec3>& vertices, vector<vec2>& textures, const path& file_path) const;
-	void prepareTexture2DFromFile(const string& file_name) const;
-	void prepareTexture(const int& n_bytes_per_vertex, const string& texture_file_name);
-	void prepareVertexBuffer(const int& n_bytes_per_vertex);
-	void setFaceObject();
-	void setFaceShader();
-	void setCamera(
-		const int& width, 
-		const int& height, 
-		const float& focal_length,
-		const Vec3f& euler_angle_in_degree
-	);
-	void setRenderBuffer();
-	void drawFaceModel();
-	void captureFaceImage(Mat& face, Mat& depth) const;
+   bool readObjectFile(vector<vec3>& vertices, vector<vec2>& textures, const path& file_path) const;
+   void prepareTexture2DFromFile(const string& file_name) const;
+   void prepareTexture(const int& n_bytes_per_vertex, const string& texture_file_name);
+   void prepareVertexBuffer(const int& n_bytes_per_vertex);
+   void setFaceObject();
+   void setFaceShader();
+   void setCamera(
+      const int& width, 
+      const int& height, 
+      const float& focal_length,
+      const Vec3f& euler_angle_in_degree
+   );
+   void setRenderBuffer();
+   void drawFaceModel();
+   void captureFaceImage(Mat& face, Mat& depth) const;
 
 
 public:
-	ModelRender();
-	~ModelRender();
+   ModelRender(const ModelRender&) = delete;
+   ModelRender(const ModelRender&&) = delete;
+   ModelRender& operator=(const ModelRender&) = delete;
+   ModelRender& operator=(const ModelRender&&) = delete;
 
-	// rotation order is x(pitch) -> y(yaw) -> z(roll)
-	void getModelImage(
-		Mat& face,
-		Mat& depth,
-		const int& width, 
-		const int& height, 
-		const float& focal_length,
-		const Vec3f& euler_angle_in_degree
-	);
+   ModelRender();
+   ~ModelRender();
 
-	void getClipToCameraMatrix(Matx44f& pixel_to_clip) const;
+   // rotation order is x(pitch) -> y(yaw) -> z(roll)
+   void getModelImage(
+      Mat& face,
+      Mat& depth,
+      const int& width, 
+      const int& height, 
+      const float& focal_length,
+      const Vec3f& euler_angle_in_degree
+   );
+
+   void getClipToCameraMatrix(Matx44f& pixel_to_clip) const;
 };

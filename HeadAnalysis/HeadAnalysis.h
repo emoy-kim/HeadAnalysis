@@ -1,3 +1,20 @@
+/*
+ * Author: Emoy Kim
+ * E-mail: emoy.kim_AT_gmail.com
+ * 
+ * This code is a free software; it can be freely used, changed and redistributed.
+ * If you use any version of the code, please reference the code.
+ * 
+ * 
+ * NOTE:
+ *   1) _frontalize()_ function is based on the paper in [1].
+ *     - In [1], they support their own codes, but I refactored and modified a little.
+ *   
+ *   
+ * [1] https://talhassner.github.io/home/publication/2015_CVPR_1
+ * 
+ */
+
 #pragma once
 
 #include <OpenCVLinker.h>
