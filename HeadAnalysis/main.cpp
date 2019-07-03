@@ -74,8 +74,8 @@ void head_position_test()
 
 int main()
 {
-   frontalization_test();
-   //lateralization_test();
+   //frontalization_test();
+   lateralization_test();
    //head_position_test();
    return 0;
 }

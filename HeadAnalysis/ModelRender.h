@@ -19,7 +19,7 @@ using namespace cv;
 using namespace glm;
 using namespace std::experimental::filesystem;
 
-#define DEPTH_INFINITY 1.0f
+constexpr auto DEPTH_INFINITY = 1.0f;
 
 class ModelRender
 {

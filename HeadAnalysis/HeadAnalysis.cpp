@@ -31,7 +31,7 @@ bool HeadAnalysis::get3DCoordinates(Point3f& unprojected_3d, const Point2f& proj
 	const auto depth = ModelDepth.at<float>(screen.y, screen.x);
 	if (depth == DEPTH_INFINITY) return false;
 	
-	const Point2f screen_in_opencv_system(projected_2d.x, ModelDepth.rows - projected_2d.y);
+	const Point2f screen_in_opencv_system(projected_2d.x, static_cast<float>(ModelDepth.rows) - projected_2d.y);
 	const Matx41f ndc_point(
 		2.0f * screen_in_opencv_system.x / static_cast<float>(ModelDepth.cols) - 1.0f,
 		(2.0f * screen_in_opencv_system.y / static_cast<float>(ModelDepth.rows) - 1.0f), 
@@ -85,8 +85,8 @@ void HeadAnalysis::estimateCameraPose(
 
 	const auto focal_length = static_cast<float>(std::max( query.rows, query.cols ));
 	const Matx33f intrinsic(
-		focal_length, 0.0f, query.cols * 0.5f,
-		0.0f, focal_length, query.cols * 0.5f,
+		focal_length, 0.0f, static_cast<float>(query.cols) * 0.5f,
+		0.0f, focal_length, static_cast<float>(query.cols) * 0.5f,
 		0.0f, 0.0f, 1.0f
 	);
 
@@ -221,15 +221,15 @@ void HeadAnalysis::calculateReferenceNumberOfQuery(
 int HeadAnalysis::getIndicatorIfOccluded(Mat& occlusion_indicator, const Mat& reference_number_of_query) const
 {
 	const Mat& reference = reference_number_of_query;
-	const int total_sum = static_cast<int>(round( sum( reference )[0] ));
+	const auto total_sum = round( sum( reference )[0] );
 	const int middle = reference.cols / 2;
 	const Rect left_part(0, 0, middle, reference.rows);
 	const Rect right_part(middle, 0, reference.cols - middle, reference.rows);
-	const int left_sum = static_cast<int>(round( sum( reference(left_part) )[0] ));
-	const int right_sum = static_cast<int>(round( sum( reference(right_part) )[0] ));
+	const auto left_sum = static_cast<int>(round( sum( reference(left_part) )[0] ));
+	const auto right_sum = static_cast<int>(round( sum( reference(right_part) )[0] ));
 	const int sum_difference = left_sum - right_sum;
 
-	if (abs( sum_difference ) * 4.5f < total_sum) return NO_OCCLUSION;
+	if (fabs( sum_difference ) * 4.5 < total_sum) return NO_OCCLUSION;
 
 	const int occlusion_position = sum_difference > 0 ? LEFT_OCCLUSION : RIGHT_OCCLUSION;
 	occlusion_indicator = Mat::ones(reference.size(), CV_32FC1);
@@ -270,7 +270,7 @@ void HeadAnalysis::applySoftSymmetry(
 		
 		for (int i = 0; i < soft_symmetry.cols; ++i) {
 			const int symmetric_index = soft_symmetry.cols - 1 - i;
-			const float visibility_factor = 1.0f / exp( 0.5f + reference_ptr[i] * normalizer );
+			const float visibility_factor = 1.0f / exp( 0.5f + reference_ptr[i] * static_cast<float>(normalizer) );
 			const float initial_color_weight = indicator_ptr[i] + visibility_factor * indicator_ptr[symmetric_index];
 			const float symmetric_color_weight = (1.0f - visibility_factor) * indicator_ptr[symmetric_index];
 
@@ -369,7 +369,7 @@ void HeadAnalysis::drawHeadPosition(
 	const Matx33f rotation = rotation_z * rotation_y * rotation_x;
 
 	Mat draw = query.clone();
-	const Point2f p0(query.cols * 0.5f, query.rows * 0.5f);
+	const Point2f p0(static_cast<float>(query.cols) * 0.5f, static_cast<float>(query.rows) * 0.5f);
 	const float scale_factor = 0.333f * std::max( draw.cols, draw.rows );
 	Point2f p1(p0.x + scale_factor * rotation(0, 0), p0.y - scale_factor * rotation(1, 0));
 	arrowedLine( draw, p0, p1, Scalar(0, 0, 255), 3, 8, 0, 0.25 );
