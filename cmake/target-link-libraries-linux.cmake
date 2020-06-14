@@ -5,6 +5,7 @@ target_link_libraries(
         pthread
         dl
         X11
+        dlib
         opencv_core
         opencv_imgproc
         opencv_imgcodecs
